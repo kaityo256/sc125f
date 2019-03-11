@@ -9,19 +9,29 @@
 
 /*
 使い方：
-sc125f::initTables();
-を呼び出してから、
-
-
 int main(void) {
   const char *str = "000000000000000001001023040000500020002041600070000000004036702060050030800900060";
-  sc125f::initTables(); // 定数テーブルの初期化.
   int sc = sc125f::calc(str);
   printf("%d\n", sc);
 }
 */
 
 namespace sc125f {
+
+void initTables();
+int calcSc125(const char *s, int lv1, char verbose);
+int getIdx(const char *s);
+
+//テーブル初期化用のクラス
+
+struct initializer {
+  initializer() {
+    initTables();
+  }
+};
+
+//　ここでテーブルを初期化する
+__attribute__((weak)) initializer init;
 
 char msk1[81] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -46,10 +56,6 @@ int bid[81] = {
     6, 6, 6, 7, 7, 7, 8, 8, 8};
 
 char sc125table0[9][9]; // 小ラインの方向テーブル.
-
-void initTables();
-int calcSc125(const char *s, int lv1, char verbose);
-int getIdx(const char *s);
 
 int calc(const char *s) {
   return calcSc125(s, 0, 0);
